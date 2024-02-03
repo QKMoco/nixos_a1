@@ -97,7 +97,6 @@
       xz
       unzip
       p7zip
-      btop
       neovim
     #  thunderbird
     ];
@@ -115,6 +114,7 @@
     wget
     git
     curl
+    btop
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
