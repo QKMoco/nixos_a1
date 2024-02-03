@@ -5,6 +5,7 @@
 { config, lib, pkgs, ... }:
 
 {
+  nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
