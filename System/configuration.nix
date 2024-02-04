@@ -86,7 +86,7 @@
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     openssh.authorizedKeys.keys = [
       # replace with your own public key
-      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDX+6SKQz5+yKuJCjKttUyX5O+TnywxYNzapNgGwi5jGCWucEEamHdUL6x3IJKJxJahmCSnaCvt4JipSzC4QakCxHs6HP/zod187EOaXvwJFUSSUygKtqMf7ky1LNqbSAbAGWGz9cUAMgFDprqVZWQCOdXwhL9BvUWXlAl6VhlaHqS+N4kXBbR9mLV0AZItlbE9Ura9y+/Ib2aGDIJyKHIDYCXx/GKS3YkBlAViZePQZq/rqXU7gdVN1rD4eXt+Dx0tcXymOIkJdh7N0WxtlIP2T3IXyjFHF5GdwlHN/bbDUGVigPtokD2L8khw2bMFX3wYB2YoJlo1cazJnsIx/pnLaG3aAsG2kHVWYoskxGxvr0gtKeoxLtgGJ5WKmY7TEDKKDAHMT8ChBaWQFhqcsovxjJTSWrjDjBOhxQxdiktmrtmq54vIxie4sFJgnd4q/uhWkVWd4fDapX6O3fe6H9a2JMeAhvpAdwUsixlrf9ceIXg9D5lrLqdoHEzgHPSltyc= waylx@Y550"
+      "ssh-rsa XXX= waylx@Y550"
     ];
     packages = with pkgs; [
       firefox
