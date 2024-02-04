@@ -83,7 +83,7 @@
   users.users.waylx = {
     isNormalUser = true;
     description = "WayLX";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     openssh.authorizedKeys.keys = [
       # replace with your own public key
       "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDX+6SKQz5+yKuJCjKttUyX5O+TnywxYNzapNgGwi5jGCWucEEamHdUL6x3IJKJxJahmCSnaCvt4JipSzC4QakCxHs6HP/zod187EOaXvwJFUSSUygKtqMf7ky1LNqbSAbAGWGz9cUAMgFDprqVZWQCOdXwhL9BvUWXlAl6VhlaHqS+N4kXBbR9mLV0AZItlbE9Ura9y+/Ib2aGDIJyKHIDYCXx/GKS3YkBlAViZePQZq/rqXU7gdVN1rD4eXt+Dx0tcXymOIkJdh7N0WxtlIP2T3IXyjFHF5GdwlHN/bbDUGVigPtokD2L8khw2bMFX3wYB2YoJlo1cazJnsIx/pnLaG3aAsG2kHVWYoskxGxvr0gtKeoxLtgGJ5WKmY7TEDKKDAHMT8ChBaWQFhqcsovxjJTSWrjDjBOhxQxdiktmrtmq54vIxie4sFJgnd4q/uhWkVWd4fDapX6O3fe6H9a2JMeAhvpAdwUsixlrf9ceIXg9D5lrLqdoHEzgHPSltyc= waylx@Y550"
@@ -107,12 +107,14 @@
 
   services.flatpak.enable = true;
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    git
     vim 
     wget
-    git
     curl
     btop
   ];
@@ -126,7 +128,15 @@
   # };
 
   # List services that you want to enable:
-
+  
+  # Docker on NixOS want to enable:
+  virtualisation.docker = {
+    enable = true;
+    daemon.settings = {
+      "data-root" = "/home/waylx/.var/DockerCE/docker";
+      "registry-mirrors" = ["https://registry.docker-cn.com"];
+    };
+  };
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
@@ -171,7 +181,14 @@
   #
   # Do NOT change this value unless you have manually inspected all the changes it would make to your configuration,
   # and migrated your data accordingly.
-  #
+  
+  # Automatic Garbage Collection
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 7d";
+  };
+
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
   system.stateVersion = "23.11"; # Did you read the comment?
 
