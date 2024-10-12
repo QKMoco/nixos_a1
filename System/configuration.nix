@@ -5,7 +5,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  nix.settings.substituters = [ "https://mirrors.ustc.edu.cn/nix-channels/store" ];
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
@@ -13,14 +12,14 @@
 
   # Use the systemd-boot EFI boot loader.
   boot.loader = {
-    efi = {
-      canTouchEfiVariables = true;
-      efiSysMountPoint = "/boot"; # ← use the same mount point here.
-    };
-    systemd-boot.enable = true;
+	efi = {
+		canTouchEfiVariables = true;
+		efiSysMountPoint = "/boot";
+	};
+	systemd-boot.enable = true;
   };
 
-  networking.hostName = "Y550"; # Define your hostname.
+  networking.hostName = "W550"; # Define your hostname.
   # Pick only one of the below networking options.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   # Enable networking
@@ -48,17 +47,10 @@
     LC_TIME = "zh_CN.UTF-8";
   };
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the KDE Plasma Desktop Environment.
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.desktopManager.plasma5.enable = true;
-
   # Configure keymap in X11
-  services.xserver = {
+  services.xserver.xkb = {
     layout = "us";
-    xkbVariant = "";
+    variant = "";
   };
 
   # Enable CUPS to print documents.
@@ -88,47 +80,31 @@
   users.users.waylx = {
     isNormalUser = true;
     description = "WayLX";
-    extraGroups = [ "networkmanager" "wheel" "docker" ];
-    openssh.authorizedKeys.keys = [
-      # replace with your own public key
-      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDX+6SKQz5+yKuJCjKttUyX5O+TnywxYNzapNgGwi5jGCWucEEamHdUL6x3IJKJxJahmCSnaCvt4JipSzC4QakCxHs6HP/zod187EOaXvwJFUSSUygKtqMf7ky1LNqbSAbAGWGz9cUAMgFDprqVZWQCOdXwhL9BvUWXlAl6VhlaHqS+N4kXBbR9mLV0AZItlbE9Ura9y+/Ib2aGDIJyKHIDYCXx/GKS3YkBlAViZePQZq/rqXU7gdVN1rD4eXt+Dx0tcXymOIkJdh7N0WxtlIP2T3IXyjFHF5GdwlHN/bbDUGVigPtokD2L8khw2bMFX3wYB2YoJlo1cazJnsIx/pnLaG3aAsG2kHVWYoskxGxvr0gtKeoxLtgGJ5WKmY7TEDKKDAHMT8ChBaWQFhqcsovxjJTSWrjDjBOhxQxdiktmrtmq54vIxie4sFJgnd4q/uhWkVWd4fDapX6O3fe6H9a2JMeAhvpAdwUsixlrf9ceIXg9D5lrLqdoHEzgHPSltyc= waylx@Y550"
-    ];
+    extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
-      firefox
-      kate
-      neofetch
       # archives
       zip
       xz
       unzip
       p7zip
-      neovim
     #  thunderbird
     ];
   };
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-
-  services.flatpak.enable = true;
-
+ 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-  # VirtualBox can be installed on NixOS without problems
-  virtualisation.virtualbox.host.enable = true;
-  users.extraGroups.vboxusers.members = [ "waylx" ];
-  virtualisation.virtualbox.host.enableExtensionPack = true;
-  virtualisation.virtualbox.guest.enable = true;
-  virtualisation.virtualbox.guest.x11 = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     git
-    vim 
+    neovim
     wget
     curl
     btop
+    neofetch
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -141,14 +117,6 @@
 
   # List services that you want to enable:
   
-  # Docker on NixOS want to enable:
-  virtualisation.docker = {
-    enable = true;
-    daemon.settings = {
-      "data-root" = "/opt/userdata/DockerCE/docker";
-      "registry-mirrors" = ["https://6p43t1ol.mirror.aliyuncs.com"];
-    };
-  };
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
@@ -179,6 +147,11 @@
   # accidentally delete configuration.nix.
   # system.copySystemConfiguration = true;
 
+  hardware = {
+    bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+    bluetooth.enable = true; # enables support for Bluetooth
+  };
+
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
   #
@@ -202,7 +175,7 @@
   };
 
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-  system.stateVersion = "23.11"; # Did you read the comment?
+  system.stateVersion = "24.11"; # Did you read the comment?
 
 }
 
