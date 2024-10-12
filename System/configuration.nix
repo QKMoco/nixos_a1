@@ -12,8 +12,13 @@
     ];
 
   # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader = {
+    efi = {
+      canTouchEfiVariables = true;
+      efiSysMountPoint = "/boot"; # ← use the same mount point here.
+    };
+    systemd-boot.enable = true;
+  };
 
   networking.hostName = "Y550"; # Define your hostname.
   # Pick only one of the below networking options.
@@ -86,7 +91,7 @@
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     openssh.authorizedKeys.keys = [
       # replace with your own public key
-      "ssh-rsa XXX= waylx@Y550"
+      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDX+6SKQz5+yKuJCjKttUyX5O+TnywxYNzapNgGwi5jGCWucEEamHdUL6x3IJKJxJahmCSnaCvt4JipSzC4QakCxHs6HP/zod187EOaXvwJFUSSUygKtqMf7ky1LNqbSAbAGWGz9cUAMgFDprqVZWQCOdXwhL9BvUWXlAl6VhlaHqS+N4kXBbR9mLV0AZItlbE9Ura9y+/Ib2aGDIJyKHIDYCXx/GKS3YkBlAViZePQZq/rqXU7gdVN1rD4eXt+Dx0tcXymOIkJdh7N0WxtlIP2T3IXyjFHF5GdwlHN/bbDUGVigPtokD2L8khw2bMFX3wYB2YoJlo1cazJnsIx/pnLaG3aAsG2kHVWYoskxGxvr0gtKeoxLtgGJ5WKmY7TEDKKDAHMT8ChBaWQFhqcsovxjJTSWrjDjBOhxQxdiktmrtmq54vIxie4sFJgnd4q/uhWkVWd4fDapX6O3fe6H9a2JMeAhvpAdwUsixlrf9ceIXg9D5lrLqdoHEzgHPSltyc= waylx@Y550"
     ];
     packages = with pkgs; [
       firefox
@@ -108,6 +113,13 @@
   services.flatpak.enable = true;
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+
+  # VirtualBox can be installed on NixOS without problems
+  virtualisation.virtualbox.host.enable = true;
+  users.extraGroups.vboxusers.members = [ "waylx" ];
+  virtualisation.virtualbox.host.enableExtensionPack = true;
+  virtualisation.virtualbox.guest.enable = true;
+  virtualisation.virtualbox.guest.x11 = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -133,8 +145,8 @@
   virtualisation.docker = {
     enable = true;
     daemon.settings = {
-      "data-root" = "/home/waylx/.var/DockerCE/docker";
-      "registry-mirrors" = ["https://registry.docker-cn.com"];
+      "data-root" = "/opt/userdata/DockerCE/docker";
+      "registry-mirrors" = ["https://6p43t1ol.mirror.aliyuncs.com"];
     };
   };
   # Enable the OpenSSH daemon.
